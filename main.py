@@ -1,7 +1,8 @@
 import cv2
 import numpy as np
 
-img_colour = cv2.imread('/images/screws.png')   # open the saved image in colour
+
+img_colour = cv2.imread('D:/GitHub/recognise_uno_cards/images/screws.png')  # open the saved image in colour
 img = cv2.cvtColor(img_colour, cv2.COLOR_BGR2GRAY)   # convert to B/W
 img_sm = cv2.blur(img, (5, 5))         # smoothing
 thr_value, img_th = cv2.threshold(img_sm, 0, 255, cv2.THRESH_OTSU)   # binarisation
