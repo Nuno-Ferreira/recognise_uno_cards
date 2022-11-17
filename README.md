@@ -8,3 +8,4 @@ It will contain 2 files, one to recognise UNO cards through a file and another o
 
 
 ## Instructions
+Have OpenCV, matplotlib, numpy (all the standard libraries that are being used in the notebooks don't need to add it to the documentation)
