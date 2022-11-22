@@ -20,7 +20,7 @@ cv2.destroyAllWindows()
 """
 print(len(contours))
 
-
+data = []
 imgc = cv2.imread('D:/GitHub/recognise_uno_cards/images/b0.jpg')    # open the saved image in colour 
 for i, c in enumerate(contours):         # loop through all the found contours
     print(i, ':', hierarchy[0, i])          # display contour hierarchy
@@ -39,7 +39,15 @@ for i, c in enumerate(contours):         # loop through all the found contours
     [x,y,w,h] = cv2.boundingRect(c)
     #cv2.rectangle(imgc, (x,y), (x+w,y+h), (255, 0, 0), 2)
     cv2.ellipse(imgc, ellipse, (255, 0, 0), 1)
+
+    #sample = [] #add the features here so that I can use data to extract all the features to do machine learning 
+    #data.append(sample)
+
 cv2.namedWindow('picture', cv2.WINDOW_NORMAL)
 cv2.imshow('picture',imgc)
 key = cv2.waitKey(0)
 cv2.destroyAllWindows()
+
+#print(data)
+
+# then add labels to each cards within data
