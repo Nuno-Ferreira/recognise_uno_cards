@@ -5,7 +5,7 @@ import numpy as np
 img_colour = cv2.imread('D:/GitHub/recognise_uno_cards/images/b0.jpg')  # open the saved image in colour
 
 img = cv2.cvtColor(img_colour, cv2.COLOR_BGR2GRAY)   # convert to B/W
-img_sm = cv2.blur(img, (5, 5))         # smoothing
+img_sm = cv2.blur(img, (1, 1))         # smoothing
 thr_value, img_th = cv2.threshold(img_sm, 0, 255, cv2.THRESH_OTSU)   # binarisation
 kernel = np.ones((5, 5), np.uint8)
 img_close = cv2.morphologyEx(img_th, cv2.MORPH_OPEN, kernel)      # morphology correction
@@ -50,4 +50,6 @@ cv2.destroyAllWindows()
 
 #print(data)
 
+
+# label = [ 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9] #add each number times 4 for each colour
 # then add labels to each cards within data
