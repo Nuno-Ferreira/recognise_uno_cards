@@ -49,3 +49,31 @@ clf = pickle.load(open("iris_classifier.p\", \"rb"))    # load the model to test
 score = clf.score(X_test, y_test)
 print(score)
 
+
+
+"""
+image=cv2.imread(folder_path + card + ".jpg")
+
+grey=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY) 
+grey_hist=cv2.calcHist([grey],[0],None,[256],[0,256])
+eq=cv2.equalizeHist(grey)
+blurredA1=cv2.blur(eq,(3,3))
+print(eq)
+
+(T,thresh)=cv2.threshold(blurredA1,190,255,cv2.THRESH_BINARY)
+contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
+
+if len(contours) != 0:
+  for i in range(len(contours)):
+    if len(contours[i]) >= 5:
+      cv2.drawContours(thresh,contours,-1,(150,10,255),3)
+      ellipse=cv2.fitEllipse(contours[i])
+    else:
+      # optional to "delete" the small contours
+      cv2.drawContours(thresh,contours,-1,(0,0,0),-1)
+
+print(ellipse)
+cv2.imshow("Perfectlyfittedellipses",thresh)
+cv2.imshow('Orignal', image)
+cv2.waitKey(0)
+"""

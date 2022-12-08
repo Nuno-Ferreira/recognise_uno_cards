@@ -1,6 +1,9 @@
 import cv2
 import numpy as np
 import os
+import pytesseract
+
+pytesseract.pytesseract.tesseract_cmd = r"C:\Users\nunom\AppData\Local\Programs\Python\Python310\Lib\site-packages\pytesseract\pytesseract.py"
 
 folder_path = r'D:/GitHub/recognise_uno_cards/images/'
 
@@ -11,32 +14,7 @@ card_colors = ['b', 'g', 'y', 'r']
  # for i in range(9):
 #    card[c][i]
 
-"""
-image=cv2.imread(folder_path + card + ".jpg")
 
-grey=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY) 
-grey_hist=cv2.calcHist([grey],[0],None,[256],[0,256])
-eq=cv2.equalizeHist(grey)
-blurredA1=cv2.blur(eq,(3,3))
-print(eq)
-
-(T,thresh)=cv2.threshold(blurredA1,190,255,cv2.THRESH_BINARY)
-contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
-
-if len(contours) != 0:
-  for i in range(len(contours)):
-    if len(contours[i]) >= 5:
-      cv2.drawContours(thresh,contours,-1,(150,10,255),3)
-      ellipse=cv2.fitEllipse(contours[i])
-    else:
-      # optional to "delete" the small contours
-      cv2.drawContours(thresh,contours,-1,(0,0,0),-1)
-
-print(ellipse)
-cv2.imshow("Perfectlyfittedellipses",thresh)
-cv2.imshow('Orignal', image)
-cv2.waitKey(0)
-"""
 img_colour = cv2.imread(folder_path + card + '.jpg')  # open the saved image in colour
 img = cv2.cvtColor(img_colour, cv2.COLOR_BGR2GRAY)   # convert to B/W
 #img_sm = cv2.blur(img, (1, 1))         # smoothing
@@ -65,12 +43,19 @@ for i, c in enumerate(contours):         # loop through all the found contours
     print('axes ratio: ', axes_ratio, '\n')
     cv2.drawContours(img_colour, [c], 0, (0, 255, 0), 2)   # paint contour c
     cv2.putText(img_colour, str(i), (c[0, 0, 0]+20, c[0, 0, 1]+30), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255))    # identify contour c
-    [x,y,w,h] = cv2.boundingRect(c)
+    #[x,y,w,h] = cv2.boundingRect(c)
    # cv2.rectangle(img_colour, (x,y), (x+w,y+h), (255, 0, 0), 2)
     cv2.ellipse(img_colour, ellipse, (255, 0, 0), 2)
 
+    # add a function/if statement to get rid of all the other ellipses
+
+    
     #sample = [] #add the features here so that I can use data to extract all the features to do machine learning 
     #data.append(sample)
+  
+#text = pytesseract.image_to_string(thresholdImage) # config="--psm 6"
+#tessedit_char_whitelist=0123456789
+#print(text)
 
 cv2.namedWindow('picture', cv2.WINDOW_NORMAL)
 cv2.imshow('picture',img_colour)
