@@ -1,3 +1,4 @@
+
 #Basic steps for finding the number of corners in a contour (depends on the polygon_constant you choose)
 perimeter = cv2.arcLength(contour, True)   # contour length, also potentially useful
 polygon_constant = 0.04    # try changing this value to get more or less corners
@@ -41,11 +42,11 @@ iris = datasets.load_iris()
 X_train, X_test, y_train, y_test = train_test_split(iris.data, iris.target, test_size=.8, random_state=42)
 classifier = MLPClassifier()
 classifier.fit(X_train, y_train)
-pickle.dump(classifier, open("iris_classifier.p\", \"wb"))    # save the model after training, remember the file name
+pickle.dump(classifier, open("iris_classifier.p", "wb"))    # save the model after training, remember the file name
 #classifier = []
 #score = classifier.score(X_test, y_test)
     
-clf = pickle.load(open("iris_classifier.p\", \"rb"))    # load the model to test it (usually in a different script)
+clf = pickle.load(open("iris_classifier.p", "rb"))    # load the model to test it (usually in a different script)
 score = clf.score(X_test, y_test)
 print(score)
 
