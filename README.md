@@ -10,9 +10,12 @@ Libraries required:
 Numpy;
 Pickle;
 Pandas;
+SKLearn
 KNeighborsClassifier;
 MLPClassifier.
 
 
 ## Instructions
-Have OpenCV, matplotlib, numpy (all the standard libraries that are being used in the notebooks don't need to add it to the documentation)
+To identify the UNO card images run the **main.py** file and then insert the desired card with this format: b4 for the card Blue 4.
+
+To use the camera identification run the **camera_main.py** file and present the card with a neutral background, for example, a blank piece of paper.
