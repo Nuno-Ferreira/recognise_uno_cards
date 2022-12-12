@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 import os
+import pickle
+import csv
 import matplotlib.pyplot as plt
 #from tensorflow.keras.models import load_model 
 from sklearn import datasets
@@ -34,11 +36,12 @@ def prediciton(image, model):
 folder_path = r'D:/GitHub/recognise_uno_cards/images/'
 
 card = ''
-card_colors = ['b', 'g', 'y', 'r']
+card_colors = ['b', 'g', 'r', 'y']
 # yellow is the problematic colour since it doesn't show up in B/W card | it also has a lot of shadows in numbers
 
+
 for c in range(10):
-  card = card_colors[1] + str(c)    # is used to combine the number and the color letter in a string
+  card = card_colors[0] + str(c)    # is used to combine the number and the color letter in a string
   img_colour = cv2.imread(folder_path + card + '.jpg')  # open the saved image in colour
   img = cv2.cvtColor(img_colour, cv2.COLOR_BGR2GRAY)   # convert to B/W
   estimatedThreshold, thresholdImage=cv2.threshold(img,160,255,cv2.THRESH_BINARY)
@@ -50,7 +53,10 @@ for c in range(10):
   #img_close = cv2.morphologyEx(img_th, cv2.MORPH_OPEN, kernel)      # morphology correction
   #img_canny = cv2.Canny(img_close, 50, 100)                          # edge detection
 
-  #data = []
+
+  data = []
+  all_areas = []
+  features_list = []
 
   for i, c in enumerate(contours):         # loop through all the found contours
       if hierarchy[0,i,3] != -1 and hierarchy[0,i,3] != 0:
@@ -62,7 +68,10 @@ for c in range(10):
         vertex_approx = len(cv2.approxPolyDP(c, epsilon, True))     # approximate with polygon
         print('approx corners: ', vertex_approx, '\n')                    # number of vertices
         area = cv2.contourArea(c)
+        #all_areas.append(area)
         print('area: ', area, '\n')
+        #all_areas.sort(reverse=True)
+        #largest_contour = all_areas[0]
         if len(contours[i]) >= 5:
           ellipse = cv2.fitEllipse(c)
         (center, axes, orientation) = ellipse
@@ -71,6 +80,14 @@ for c in range(10):
         (xc,yc),(d1,d2),angle = ellipse
         axes_ratio = round(d1/d2, 3)
         print('axes ratio: ', axes_ratio, '\n')
+
+        corners = vertex_approx
+        shape_complexity = area/perimeter
+        relative_length = minoraxis_length/majoraxis_length
+        features = [area, shape_complexity, axes_ratio, relative_length, corners]
+        features_list.append(features)
+        features_list.sort(reverse=True)
+
         cv2.drawContours(img_colour, [c], 0, (0, 255, 0), 2)   # paint contour c
         cv2.putText(img_colour, str(i), (c[0, 0, 0]+20, c[0, 0, 1]+30), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255))    # identify contour c
         #[x,y,w,h] = cv2.boundingRect(c)
@@ -82,21 +99,15 @@ for c in range(10):
 
       # I can crop the image by the biggest contour and then add a feature to see if it has any children
       
-      #sample = [] #add the features here so that I can use data to extract all the features to do machine learning 
-      #data.append(sample)
-  X = numbers.data
-  y = numbers.target
-  corners = vertex_approx
-  shape_complexity = area/perimeter
-  relative_length = minoraxis_length/majoraxis_length
-  features = [corners, shape_complexity, axes_ratio, relative_length]
+  colour_label = card[0]
+  number_label = int(card[1])
 
-  filename = card + '.jpg'
-  colour_label = filename[0]
-  number_label = int(filename[1])
+  data.append(features_list[0])
+  data.append(number_label)
 
-  np.concatenate(X, features)
-  np.concatenate(y, number_label)
+  with open("dataset.csv", "a", newline='') as f:
+    wr = csv.writer(f, dialect='excel')
+    wr.writerow(data)
 
 
   cv2.namedWindow('picture', cv2.WINDOW_NORMAL)
@@ -105,7 +116,10 @@ for c in range(10):
   key = cv2.waitKey(0)
   cv2.destroyAllWindows()
 
-  #print(data)
-  # label = [ 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9] #add each number times 4 for each colour
-  # then add labels to each cards within data
-  # can use filename[0] to add label
+
+  
+  #X = numbers.data
+  #y = numbers.target
+  #np.concatenate(X, features)
+  #np.concatenate(y, number_label)
+
