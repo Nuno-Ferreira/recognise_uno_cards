@@ -4,6 +4,7 @@ import os
 import pickle
 import csv
 import pandas as pd
+import itertools
 import matplotlib.pyplot as plt
 #from tensorflow.keras.models import load_model 
 from sklearn import datasets
@@ -42,9 +43,19 @@ card = ''
 card_colors = ['b', 'g', 'r', 'y']
 # yellow is the problematic colour since it doesn't show up in B/W card | it also has a lot of shadows in numbers
 
+
+# This function is used to flatten the data list later on due to it being a list of lists
+def flatten(list_of_lists):
+  if len(list_of_lists) == 0:
+    return list_of_lists
+  if isinstance(list_of_lists[0], list):
+    return flatten(list_of_lists[0]) + flatten(list_of_lists[1:])
+  return list_of_lists[:1] + flatten(list_of_lists[1:])
+
+
 # For loop used to loop through all the numbers
 for c in range(10):
-  card = card_colors[2] + str(c)    # is used to combine the number and the color letter in a string
+  card = card_colors[0] + str(c)    # is used to combine the number and the color letter in a string
   img_colour = cv2.imread(folder_path + card + '.jpg')  # open the saved image in colour
   img = cv2.cvtColor(img_colour, cv2.COLOR_BGR2GRAY)   # convert to B/W
   estimatedThreshold, thresholdImage=cv2.threshold(img,160,255,cv2.THRESH_BINARY)
@@ -84,13 +95,13 @@ for c in range(10):
         axes_ratio = round(d1/d2, 3)
         print('axes ratio: ', axes_ratio, '\n')
 
-        # Feature Extraction
-        # corners = vertex_approx
-        # shape_complexity = area/perimeter
-        # relative_length = minoraxis_length/majoraxis_length
-        # features = [area, shape_complexity, axes_ratio, relative_length, corners]
-        # features_list.append(features)
-        # features_list.sort(reverse=True)
+        #Feature Extraction
+        corners = vertex_approx
+        shape_complexity = area/perimeter
+        relative_length = minoraxis_length/majoraxis_length
+        features = [area, shape_complexity, axes_ratio, relative_length, corners]
+        features_list.append(features)
+        features_list.sort(reverse=True)
 
 
         cv2.drawContours(img_colour, [c], 0, (0, 255, 0), 2)   # paint contour c
@@ -103,16 +114,18 @@ for c in range(10):
 
 
   #colour_label = card[0]
-  # number_label = int(card[1])
+  number_label = int(card[1])
 
-  # # Appending features and labels to create the data needed for dataset
-  # data.append(features_list[0])
-  # data.append(number_label)
+  # Appending features and labels to create the data needed for dataset
+  data.append(features_list[0])
+  data.append(number_label)
 
-  # # Writing features and labels to dataset
-  # with open("dataset.csv", "a", newline='') as f:
-  #   wr = csv.writer(f, dialect='excel')
-  #   wr.writerow(data)
+  # Writing features and labels to dataset
+  with open("dataset.csv", "a", newline='') as csv_file:
+    wr = csv.writer(csv_file, dialect='excel')
+    data_flat = flatten(data)
+    wr.writerow(data_flat)
+
 
 
   cv2.namedWindow('picture', cv2.WINDOW_NORMAL)
