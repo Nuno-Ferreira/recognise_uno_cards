@@ -6,6 +6,12 @@ It will contain 2 files, one to recognise UNO cards through a file and another o
 
 
 ## Requirements
+Libraries required:
+Numpy;
+Pickle;
+Pandas;
+KNeighborsClassifier;
+MLPClassifier.
 
 
 ## Instructions
