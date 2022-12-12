@@ -33,25 +33,25 @@ y = np.array(y)
 
 # KNeighborsClassifier
 
-clf = KNeighborsClassifier(3)
-X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.8)
-clf.fit(X_train, y_train)        # train the classifier with the available data
-y_predict = clf.predict(X_test)  # test the classifier on the new data
-y_predict = y_predict.reshape(len(y_test),1)
+# clf = KNeighborsClassifier(3)
+# X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.8)
+# clf.fit(X_train, y_train)        # train the classifier with the available data
+# y_predict = clf.predict(X_test)  # test the classifier on the new data
+# y_predict = y_predict.reshape(len(y_test),1)
 
-score = sum(y_predict == y_test)/len(y_test)  # compare the predicted classes with actual ones and compute the muber of correct guesses
-print(score*100, '%')
+# score = sum(y_predict == y_test)/len(y_test)  # compare the predicted classes with actual ones and compute the muber of correct guesses
+# print(score*100, '%')
 
-for i in range(len(y_predict)):
-    print(y_predict[i], y_test[i])
+# for i in range(len(y_predict)):
+#     print(y_predict[i], y_test[i])
 
 # MLPClassifier
 
-# X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.5)
-# classifier = MLPClassifier()
-# classifier.fit(X_train,y_train)
-# pickle.dump(classifier, open("digits_classifier.p", "wb"))
+X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.5)
+classifier = MLPClassifier()
+classifier.fit(X_train,y_train)
+pickle.dump(classifier, open("digits_classifier.p", "wb"))
 
-# clf = pickle.load(open("iris_classifier.p", "rb"))    # load the model to test it (usually in a different script)
-# score = clf.score(X_test, y_test)
-# print(score*100)
+clf = pickle.load(open("digits_classifier.p", "rb"))    # load the model to test it (usually in a different script)
+score = clf.score(X_test, y_test)
+print(score*100)
