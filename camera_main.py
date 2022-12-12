@@ -1,10 +1,15 @@
 import cv2
 import numpy as np
+import os
+import pickle
+import csv
+import pandas as pd
 
 kernel = np.ones((5, 5), np.uint8)
 vc = cv2.VideoCapture(0)
 
 while vc.isOpened():
+    rfc = pickle.load(open("digits_classsifier.p", "rb"))     
     rval, frame = vc.read()
     img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     thr_value, img_thresh = cv2.threshold(img_gray, 80, 255, cv2.THRESH_BINARY_INV)
@@ -17,5 +22,9 @@ while vc.isOpened():
     if key == 27:
         break
         
+    y_predict = classifier.predict(X_test)
+    result = int(y_predict)
+    text = card + str(result)
+    cv2.putText(frame, text, (x, y), cv2.FONT_HERSHEY_DUPLEX)
 cv2.destroyWindow('stream')
 vc.release()
