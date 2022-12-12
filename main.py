@@ -17,7 +17,7 @@ card = input('What card would you like to have a look?:')
 #card = ''
 #card_colors = ['b', 'g', 'r', 'y']
 
-
+file = pickle.load(open('digits_classifier.p', "rb"))  
 
 # This function is used to flatten the data list later on due to it being a list of lists
 def flatten(list_of_lists):
@@ -67,16 +67,21 @@ for i, c in enumerate(contours):         # loop through all the found contours
       print('axes ratio: ', axes_ratio, '\n')
 
       #Feature Extraction
-      corners = vertex_approx
+      #corners = vertex_approx
       shape_complexity = area/perimeter
       relative_length = minoraxis_length/majoraxis_length
-      features = [area, shape_complexity, axes_ratio, relative_length, corners]
-      features_list.append(features)
-      features_list.sort(reverse=True)
+      features = [area, shape_complexity, axes_ratio, relative_length]
+      #features_list.append(features)
+      #features_list.sort(reverse=True)
+      features_array = (np.array(features)).reshape(1, -1)
+
+      y_predict = file.predict(features_array)
+      result = str(y_predict)
+      cv2.putText(img_colour, result, (c[0, 0, 0]+20, c[0, 0, 1]+30), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255))
 
 
       cv2.drawContours(img_colour, [c], 0, (0, 255, 0), 2)   # paint contour c
-      cv2.putText(img_colour, str(i), (c[0, 0, 0]+20, c[0, 0, 1]+30), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255))    # identify contour c
+      #cv2.putText(img_colour, str(i), (c[0, 0, 0]+20, c[0, 0, 1]+30), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255))    # identify contour c
       cv2.ellipse(img_colour, ellipse, (255, 0, 0), 2)
 
 
@@ -104,7 +109,7 @@ cv2.destroyAllWindows()
   #   wr.writerow(data_flat)
 
 #-----------------------------------------------------MACHINE LEARNING------------------------------------------------------
-
+"""
 data = pd.read_csv('dataset.csv')
 
 
@@ -138,3 +143,5 @@ for i in range(len(y_predict)):
 # clf = pickle.load(open("iris_classifier.p", "rb"))    # load the model to test it (usually in a different script)
 # score = clf.score(X_test, y_test)
 # print(score*100)
+
+"""
