@@ -15,26 +15,6 @@ from sklearn.model_selection import train_test_split, cross_val_score
 from keras.datasets import mnist
 
 
-
-"""
-model = load_model('filename')
-
-def prediciton(image, model):
-  img = cv2.resixe(image, (28, 28))
-  img = img / 255
-  img = img.reshape(1, 28, 28, 1)
-  predict = model.predict(img)
-  prob = np.amax(predict)
-  class_index = model.predict_classes(img)
-  result = class_index[0]
-  if prob < 0.75:
-    result = 0
-    prob = 0
-  return result, prob
-
-# then add the text and the prediction in the for loop
-"""
-
 # Folder path variable for the card
 folder_path = r'D:/GitHub/recognise_uno_cards/images/'
 
@@ -106,11 +86,8 @@ for c in range(10):
 
         cv2.drawContours(img_colour, [c], 0, (0, 255, 0), 2)   # paint contour c
         cv2.putText(img_colour, str(i), (c[0, 0, 0]+20, c[0, 0, 1]+30), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255))    # identify contour c
-        #[x,y,w,h] = cv2.boundingRect(c)
-      # cv2.rectangle(img_colour, (x,y), (x+w,y+h), (255, 0, 0), 2)
         cv2.ellipse(img_colour, ellipse, (255, 0, 0), 2)
 
-      # I can crop the image by the biggest contour and then add a feature to see if it has any children
 
 
   #colour_label = card[0]
@@ -127,16 +104,8 @@ for c in range(10):
     wr.writerow(data_flat)
 
 
-
   cv2.namedWindow('picture', cv2.WINDOW_NORMAL)
   cv2.imshow('picture',img_colour)
   #cv2.imshow('Image', thresholdImage)
   key = cv2.waitKey(0)
   cv2.destroyAllWindows()
-
-
-  #X = numbers.data
-  #y = numbers.target
-  #np.concatenate(X, features)
-  #np.concatenate(y, number_label)
-
