@@ -3,6 +3,7 @@ import numpy as np
 import os
 import pickle
 import csv
+import pandas as pd
 import matplotlib.pyplot as plt
 #from tensorflow.keras.models import load_model 
 from sklearn import datasets
@@ -29,19 +30,21 @@ def prediciton(image, model):
     result = 0
     prob = 0
   return result, prob
-"""
-# then add the text and the prediction in the for loop
 
-# Folder path variable to add the card
+# then add the text and the prediction in the for loop
+"""
+
+# Folder path variable for the card
 folder_path = r'D:/GitHub/recognise_uno_cards/images/'
 
+# Card variables to make up the card filename
 card = ''
 card_colors = ['b', 'g', 'r', 'y']
 # yellow is the problematic colour since it doesn't show up in B/W card | it also has a lot of shadows in numbers
 
-
+# For loop used to loop through all the numbers
 for c in range(10):
-  card = card_colors[0] + str(c)    # is used to combine the number and the color letter in a string
+  card = card_colors[2] + str(c)    # is used to combine the number and the color letter in a string
   img_colour = cv2.imread(folder_path + card + '.jpg')  # open the saved image in colour
   img = cv2.cvtColor(img_colour, cv2.COLOR_BGR2GRAY)   # convert to B/W
   estimatedThreshold, thresholdImage=cv2.threshold(img,160,255,cv2.THRESH_BINARY)
@@ -55,7 +58,7 @@ for c in range(10):
 
 
   data = []
-  all_areas = []
+  #all_areas = []
   features_list = []
 
   for i, c in enumerate(contours):         # loop through all the found contours
@@ -68,8 +71,8 @@ for c in range(10):
         vertex_approx = len(cv2.approxPolyDP(c, epsilon, True))     # approximate with polygon
         print('approx corners: ', vertex_approx, '\n')                    # number of vertices
         area = cv2.contourArea(c)
-        #all_areas.append(area)
         print('area: ', area, '\n')
+        #all_areas.append(area)
         #all_areas.sort(reverse=True)
         #largest_contour = all_areas[0]
         if len(contours[i]) >= 5:
@@ -81,12 +84,14 @@ for c in range(10):
         axes_ratio = round(d1/d2, 3)
         print('axes ratio: ', axes_ratio, '\n')
 
-        corners = vertex_approx
-        shape_complexity = area/perimeter
-        relative_length = minoraxis_length/majoraxis_length
-        features = [area, shape_complexity, axes_ratio, relative_length, corners]
-        features_list.append(features)
-        features_list.sort(reverse=True)
+        # Feature Extraction
+        # corners = vertex_approx
+        # shape_complexity = area/perimeter
+        # relative_length = minoraxis_length/majoraxis_length
+        # features = [area, shape_complexity, axes_ratio, relative_length, corners]
+        # features_list.append(features)
+        # features_list.sort(reverse=True)
+
 
         cv2.drawContours(img_colour, [c], 0, (0, 255, 0), 2)   # paint contour c
         cv2.putText(img_colour, str(i), (c[0, 0, 0]+20, c[0, 0, 1]+30), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255))    # identify contour c
@@ -94,30 +99,29 @@ for c in range(10):
       # cv2.rectangle(img_colour, (x,y), (x+w,y+h), (255, 0, 0), 2)
         cv2.ellipse(img_colour, ellipse, (255, 0, 0), 2)
 
-
-      # add an if statement to only add the contour that is biggest between the number in center and on the sides
-
       # I can crop the image by the biggest contour and then add a feature to see if it has any children
-      
-  colour_label = card[0]
-  number_label = int(card[1])
 
-  data.append(features_list[0])
-  data.append(number_label)
 
-  with open("dataset.csv", "a", newline='') as f:
-    wr = csv.writer(f, dialect='excel')
-    wr.writerow(data)
+  #colour_label = card[0]
+  # number_label = int(card[1])
+
+  # # Appending features and labels to create the data needed for dataset
+  # data.append(features_list[0])
+  # data.append(number_label)
+
+  # # Writing features and labels to dataset
+  # with open("dataset.csv", "a", newline='') as f:
+  #   wr = csv.writer(f, dialect='excel')
+  #   wr.writerow(data)
 
 
   cv2.namedWindow('picture', cv2.WINDOW_NORMAL)
   cv2.imshow('picture',img_colour)
-  cv2.imshow('Image', thresholdImage)
+  #cv2.imshow('Image', thresholdImage)
   key = cv2.waitKey(0)
   cv2.destroyAllWindows()
 
 
-  
   #X = numbers.data
   #y = numbers.target
   #np.concatenate(X, features)
